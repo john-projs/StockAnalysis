@@ -10,6 +10,7 @@ class FetchAPIData:
     """
     Helper class to fetch and write data from AlphaVantage's API and save locally
     """
+
     def __init__(
         self,
         path: str,
