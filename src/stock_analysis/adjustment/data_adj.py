@@ -1,6 +1,7 @@
 """
 Perform data adjustment to account for stock splits and dividends
 """
+
 from numpy.typing import ArrayLike
 import numpy as np
 from stock_analysis.ticker import Ticker
@@ -13,6 +14,20 @@ def adjust_ticker(
     dividend_dates: ArrayLike = None,
     dividends: ArrayLike = None,
 ) -> Ticker:
+    """
+    Create adjusted ticker data, i.e. adjusted close to account for stock splits and dividends.
+    Starts from current period and works backwards.
+
+    Args:
+        ticker: Ticker object
+        split_dates: Array of stock split dates
+        split_ratio: Array of stock split ratio
+        dividend_dates: Array of dividend dates
+        dividends: Array of dividend amounts
+
+    Returns:
+        Ticker object with adjusted data
+    """
     adjusted_data = ticker.data
 
     # First apply Stock Split adjustment
@@ -42,9 +57,20 @@ def adjust_ticker(
             adjusted_data,
         )
 
-    ticker_adj = Ticker(ticker.name+"_adj", adjusted_data, ticker.index)
+    ticker_adj = Ticker(ticker.name + "_adj", adjusted_data, ticker.index)
     return ticker_adj
 
 
 def get_dividend_ratio(dividend: float, closing_price: float):
+    """
+    Calculate the dividend ratio, defined as 1 - dividend/closing_price
+
+    Args:
+        dividend: Dividend amount
+        closing_price: Closing price on day before dividend
+
+    Returns:
+        Dividend ratio
+
+    """
     return 1 - (dividend / closing_price)
